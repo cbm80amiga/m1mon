@@ -31,17 +31,16 @@ Can be used for remote monitoring of Mac computers, tested with Linux terminal a
 
 ## Features
 - CPU utilization for each core and cluster
-- GPU utilization, curre
-- Each CPU core speed and throttling
+- GPU utilization
+- Each CPU core speed and possible throttling
 - Current and maximum observed power consumption:
- - Entire SoC
- - CPU
- - Efficiency Cluster
- - Performance Cluster
- - GPU
- - RAM
- - Apple Neural Engine
- - RAM
+  - Entire SoC
+  - CPU
+  - Efficiency Cluster
+  - Performance Cluster
+  - GPU
+  - Apple Neural Engine
+  - RAM
 
 If you find it useful and want to buy me a coffee or a beer:
 
