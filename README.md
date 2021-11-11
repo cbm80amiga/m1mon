@@ -9,7 +9,7 @@ Tested on M1 MacBook Air, should work on M1 Pro and M1 Max machines as well
 
 ## Binary
 
-Download binary for macOS arm64 [here](https://github.com/cbm80amiga/m1mon/blob/main/build/m1mon)
+Download binary for macOS arm64 [here](https://github.com/cbm80amiga/m1mon/releases/download/v1/m1mon)
 
 ## To compile
 Requires Xcode and ncurses to compile
