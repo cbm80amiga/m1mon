@@ -42,6 +42,8 @@ Can be used for remote monitoring of Mac computers, tested with Linux terminal a
   - Apple Neural Engine
   - RAM
 
+[![Github All Releases](https://img.shields.io/github/downloads/cbm80amiga/m1mon/total.svg)]()
+
 If you find it useful and want to buy me a coffee or a beer:
 
 https://www.paypal.me/cbm80amiga
