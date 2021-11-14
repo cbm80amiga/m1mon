@@ -7,6 +7,8 @@ Tested on M1 MacBook Air, should work on M1 Pro and M1 Max machines as well
 
 ![MBA](https://github.com/cbm80amiga/m1mon/blob/main/screenshots/m1mon1.jpg)
 
+YouTube video:  https://youtu.be/ePbT4pDZzTA
+
 ## Binary
 
 Download binary for macOS arm64 [here](https://github.com/cbm80amiga/m1mon/releases/download/v1/m1mon)
