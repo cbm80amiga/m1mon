@@ -68,7 +68,19 @@ int eFreqMax=0;
 float eActive=0;
 int pFreq=0;
 int pFreqMax=0;
+int p0Freq=0;
+int p0FreqMax=0;
+int p1Freq=0;
+int p1FreqMax=0;
+int p2Freq=0;
+int p2FreqMax=0;
+int p3Freq=0;
+int p3FreqMax=0;
 float pActive=0;
+float p0Active=0;
+float p1Active=0;
+float p2Active=0;
+float p3Active=0;
 unsigned int cnt=0;
 int sx=0,sy=0;
 int sxOld=0,syOld=0;
@@ -157,9 +169,31 @@ void displayAll()
         mvprintw(cpuY+i,cpuX,"E-Clust:");
         displayLine(cpuY+i,cpuX+9,eActive,eFreq,eFreqMax);
         i++;
-        mvprintw(cpuY+i,cpuX,"P-Clust:");
-        displayLine(cpuY+i,cpuX+9,pActive,pFreq,pFreqMax);
-        i++;
+        if(pFreq>0) {
+            mvprintw(cpuY+i,cpuX,"P-Clust:");
+            displayLine(cpuY+i,cpuX+9,p0Active,p0Freq,p0FreqMax);
+            i++;
+        }
+        if(p0Freq>0) {
+            mvprintw(cpuY+i,cpuX,"P0-Clust:");
+            displayLine(cpuY+i,cpuX+9,p0Active,p0Freq,p0FreqMax);
+            i++;
+        }
+        if(p1Freq>0) {
+            mvprintw(cpuY+i,cpuX,"P1-Clust:");
+            displayLine(cpuY+i,cpuX+9,p1Active,p1Freq,p1FreqMax);
+            i++;
+        }
+        if(p2Freq) {
+            mvprintw(cpuY+i,cpuX,"P2-Clust:");
+            displayLine(cpuY+i,cpuX+9,p2Active,p2Freq,p2FreqMax);
+            i++;
+        }
+        if(p3Freq) {
+            mvprintw(cpuY+i,cpuX,"P3-Clust:");
+            displayLine(cpuY+i,cpuX+9,p3Active,p3Freq,p3FreqMax);
+            i++;
+        }
     }
 
     powerY = cpuY+i; i=0;
@@ -170,8 +204,8 @@ void displayAll()
     mvprintw(powerY+i,powerX+13,"cur       max");
     i++;
     mvprintw(powerY+i,powerX,"Package:");
-    mvprintw(powerY+i,powerX+maxlen+2,"%5d mW",powerMap["Package"]);
-    mvprintw(powerY+i,powerX+maxlen+2+10,"%5d mW",powerMaxMap["Package"]);
+    mvprintw(powerY+i,powerX+maxlen+2,"%5d mW",powerMap["PACKAGE"]);
+    mvprintw(powerY+i,powerX+maxlen+2+10,"%5d mW",powerMaxMap["PACKAGE"]);
     i++;
     mvprintw(powerY+i,powerX,"CPU:");
     mvprintw(powerY+i,powerX+maxlen+2,"%5d mW",powerMap["CPU"]);
@@ -182,7 +216,7 @@ void displayAll()
     mvprintw(powerY+i,powerX+maxlen+2+10,"%5d mW",powerMaxMap["GPU"]);
     i++;
     for ( powerIter = powerMap.begin(); powerIter != powerMap.end(); ++powerIter ) {
-        if(powerIter->first!="Package" && powerIter->first!="CPU" && powerIter->first!="GPU") {
+        if(powerIter->first!="PACKAGE" && powerIter->first!="CPU" && powerIter->first!="GPU") {
             mvprintw(powerY+i,powerX,"%s:",powerIter->first.c_str());
             mvprintw(powerY+i,powerX+maxlen+2,"%5d mW",powerIter->second);
             mvprintw(powerY+i,powerX+maxlen+2+10,"%5d mW",powerMaxMap[powerIter->first]);
@@ -231,7 +265,7 @@ int main(int argc, char *argv[])
     while(!feof(f)) {
         if(strstr(buf,"Sampled system")) {
             if((p=strstr(buf,":"))) {
-                if(p) strncpy(timeStamp,p-2,8);                
+                if(p) strncpy(timeStamp,p-2,8);
             }
             cnt++;
 #if DEBUG==1
@@ -251,6 +285,16 @@ int main(int argc, char *argv[])
             std::string pow = buf;
             powerMap[pow] = atoi(p+7);
             powerMaxMap[pow] = MAX(powerMaxMap[pow],powerMap[pow]);
+        }
+        if((p=strstr(buf,"Combined Power (CPU + GPU + ANE):"))) {
+            //*(p-1)=0;
+            std::string pow = "PACKAGE";
+            //printf("pow= %s",pow.c_str());
+            p = strstr(p,":");
+            if (p) {
+                powerMap[pow] = atoi(p+2);
+                powerMaxMap[pow] = MAX(powerMaxMap[pow],powerMap[pow]);
+            }
         } else
         if( (p=strstr(buf,"CPU")) && isdigit(*(p+4)) ) {
             int cpu = atoi(p+4);
@@ -273,7 +317,35 @@ int main(int argc, char *argv[])
                 p = strstr(p,":");
                 if(p) pFreq=atoi(p+2);
             } else
-               parseActive(p,&pActive,&pFreqMax);
+                parseActive(p,&pActive,&pFreqMax);
+        } else
+        if((p=strstr(buf,"P0-Cluster")) && showClust) {
+            if(strstr(p,"active frequency")) {
+                p = strstr(p,":");
+                if(p) p0Freq=atoi(p+2);
+            } else
+               parseActive(p,&p0Active,&p0FreqMax);
+        } else
+        if((p=strstr(buf,"P1-Cluster")) && showClust) {
+            if(strstr(p,"active frequency")) {
+                p = strstr(p,":");
+                if(p) p1Freq=atoi(p+2);
+            } else
+                parseActive(p,&p1Active,&p1FreqMax);
+        } else
+        if((p=strstr(buf,"P2-Cluster")) && showClust) {
+            if(strstr(p,"active frequency")) {
+                p = strstr(p,":");
+                if(p) p2Freq=atoi(p+2);
+            } else
+                parseActive(p,&p2Active,&p2FreqMax);
+        } else
+        if((p=strstr(buf,"P3-Cluster")) && showClust) {
+            if(strstr(p,"active frequency")) {
+                p = strstr(p,":");
+                if(p) p3Freq=atoi(p+2);
+            } else
+                parseActive(p,&p3Active,&p3FreqMax);
         } else
         if((p=strstr(buf,"GPU"))) {
             if(strstr(p,"active frequency")) {
